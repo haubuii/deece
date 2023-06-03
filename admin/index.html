@@ -91,6 +91,10 @@
                                                 style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
 
                                             <div class="d-flex justify-content-between">
+                                                <p class="">Ship</p>
+                                                <p class="" style="color: #35558a;">Freeship</p>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
                                                 <p class="fw-bold">Tổng cộng</p>
                                                 <p class="fw-bold" style="color: #35558a;">{{totalPriceList[$index] |
                                                     number:0}}đ</p>
@@ -196,7 +200,7 @@
 
         // function update order
         function updateOrder(orderId, status) {
-            var url_add_new_order = "http://api.deece.vn/updateOrders";
+            var url_add_new_order = "https://api.deece.vn/updateOrders";
             var data = {
                 ordersId: orderId,
                 status: status,
