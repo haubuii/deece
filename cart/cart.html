@@ -1,0 +1,103 @@
+<head>
+    <link rel="stylesheet" href="cart.css">
+</head>
+<section class="h-100 h-custom">
+    <div class="container py-3 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-12 col-xs-12">
+                <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                    <div class="card-body p-0 shadow">
+                        <div class="row g-0">
+                            <div class="col-lg-8">
+                                <div class="p-5">
+                                    <div class="d-flex justify-content-between align-items-center mb-5">
+                                        <h1 class="fw-bold mb-0 text-black">Giỏ hàng</h1>
+                                        <h6 class="mb-0 text-muted">{{totalCart.total_quantity}} items</h6>
+                                    </div>
+                                    <hr class="my-4">
+
+                                    <div class="" ng-repeat="food in listcart">
+                                        <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                            <div class="col-md-2">
+                                                <img src="{{food.image_food}}"
+                                                    class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                            </div>
+                                            <div class="col-md-4 col-xs-6">
+                                                <h6 class="text-black my-2 text-center">{{food.name_food}}</h6>
+                                            </div>
+                                            <div class="col-md-2 col-xs-6 d-flex mb-2">
+                                                <button class="btn btn-none px-2" ng-click="sub_food_cart($index)">
+                                                    <i class="bi bi-dash-circle"></i>
+                                                </button>
+                                                <input id="form1" min="0" name="quantity"
+                                                    ng-model="listcart[$index].quantity" type="text" disabled
+                                                    class="form-control form-control-sm" />
+                                                <button class="btn btn-none px-2" ng-click="add_food_cart($index)">
+                                                    <i class="bi bi-plus-circle"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-3 col-xs-6 d-flex justify-content-between">
+                                                <button ng-click="delete_food_cart($index)" class="btn btn-none"><i
+                                                        class="bi bi-cart-x fs-6"></i></button>
+                                                <span class="">{{food.price_food | number:0}} đ</span>
+                                            </div>
+                                        </div>
+                                        <hr class="my-4">
+                                    </div>
+
+
+
+                                    <div class="pt-5">
+                                        <h6 class="mb-0"><a href="#!" class="text-body"><i
+                                                    class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 bg-dark text-white border-start-0 rounded-3">
+                                <div class="p-5">
+                                    <h3 class="fw-bold mb-5 mt-2 pt-1">Thanh toán</h3>
+                                    <hr class="my-4">
+
+                                    <div class="d-flex justify-content-between mb-4">
+                                        <h5 class="text-uppercase">items {{totalCart.total_quantity}}</h5>
+                                        <h5>{{totalCart.total_price | number:0}}đ</h5>
+                                    </div>
+
+                                    <!-- Form -->
+                                    <form action="" name="FormOrder">
+                                        <div class="form-outline mb-4">
+                                            <input type="text" ng-model="order_phone" id="form1Example1"
+                                                class="form-control" />
+                                            <label class="form-label" for="form1Example1">Số điện thoại</label>
+                                        </div>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="text" ng-model="order_name" id="name_order"
+                                                class="form-control" />
+                                            <label class="form-label" for="name_order">Tên người nhận hàng</label>
+                                        </div>
+                                        <div class="form-floating">
+                                            <textarea class="form-control" ng-model="order_desc"
+                                                placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                            <label for="floatingTextarea"><span class="text-dark">Nhập thông tin giao
+                                                    hàng</span></label>
+                                        </div>
+                                        <span class="mb-2">Ghi chú</span>
+                                        <hr class="my-4">
+                                        <div class="d-flex justify-content-between mb-5">
+                                            <h5 class="text-uppercase">Tổng tiền</h5>
+                                            <h5>{{totalCart.total_price | number:0}}đ</h5>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-light btn-block btn-lg w-100"
+                                            ng-click="order()" data-mdb-ripple-color="dark">Đặt hàng</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

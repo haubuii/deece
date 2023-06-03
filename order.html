@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ADMIN</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.8.0/angular-route.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body ng-app="myApp" class="d-flex align-items-center" style="height: 100vh; width: 100vw;">
+    <div class="container" ng-controller="adminCtrl">
+        <div class="row shadow-lg m-auto rounded-3 overflow-auto" style="height: 80vh;">
+            <div class="mx-auto px-5">
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Tên người nhận</th>
+                            <th scope="col">Số điện thoại</th>
+                            <th scope="col">Ghi chú</th>
+                            <th scope="col">Ngày đặt hàng</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="order in order_list">
+                            <th scope="row">{{$index + 1}}</th>
+                            <td>{{order.name}}</td>
+                            <td>{{order.phone}}</td>
+                            <td>{{order.note}}</td>
+                            <td>{{order.created_at}}</td>
+                            <td>
+                                <span class="badge bg-secondary" ng-if='order.status == "unconfirmed"'>Chưa xác
+                                    nhận</span>
+                                <span class="badge bg-success" ng-if='order.status == "confirmed"'>Đã xác nhận</span>
+                                <span class="badge bg-warning text-dark" ng-if='order.status == "transporting"'>Đang
+                                    giao hàng</span>
+                                <span class="badge bg-primary" ng-if='order.status == "completed"'>Hoàn thành</span>
+                                <span class="badge bg-danger" ng-if='order.status == "canceled"'>Đã Huỷ</span>
+                            </td>
+                            <td>
+                                <button class="btn btn btn-outline-primary" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal{{order.id}}">
+                                    Xem chi tiết
+                                </button>
+                            </td>
+                            <!-- Modal -->
+                            <td class="modal fade" id="modal{{order.id}}" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Thông tin đơn hàng</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start text-black p-4">
+                                            <h5 class="modal-title" id="exampleModalLabel">{{order.name}}</h5>
+                                            <h5 class="modal-title text-uppercase" id="exampleModalLabel">
+                                                {{order.phone}}</h5>
+                                            <div class="mb-2">Ghi chú: {{order.note}}</div>
+                                            <p class="mb-0">Thời gian đặt hàng: {{order.created_at}}</p>
+                                            <p class="mb-3">Thời gian cập nhật: {{order.updated_at}}</p>
+
+                                            <h4 class="mb-3" style="color: #35558a;">Đơn hàng</h4>
+                                            <div class="" ng-repeat="food in order.ordersFoodList">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <img src="{{food.image}}" style="width: 70px;" alt=""
+                                                            class="img-fluid">
+                                                    </div>
+                                                    <div class="col-8 mb-2">
+                                                        <h5 class="mb-0">{{food.name}}</h5>
+                                                        <p class="mb-0">Số lượng: {{food.quantity}}</p>
+                                                        <p class="mb-0">Giá: {{food.price | number:0}}đ</p>
+                                                    </div>
+                                                    <hr>
+                                                    </hr>
+                                                </div>
+                                            </div>
+                                            <p class="mb-0 fs-5" style="color: #35558a;">Thanh toán</p>
+                                            <hr class="mt-2 mb-4"
+                                                style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
+
+                                            <div class="d-flex justify-content-between">
+                                                <p class="fw-bold">Tổng cộng</p>
+                                                <p class="fw-bold" style="color: #35558a;">{{totalPriceList[$index] |
+                                                    number:0}}đ</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer m-auto">
+                                            <button type="button" ng-click="btn_confirm(order.id, 'confirmed')"
+                                                ng-disabled='!(order.status == "unconfirmed")'
+                                                class="btn btn-primary">Xác nhận</button>
+                                            <button type="button" ng-click="btn_transport(order.id, 'transporting')"
+                                                ng-disabled='!(order.status == "confirmed")' class="btn btn-warning">Vận
+                                                chuyển</button>
+                                            <button type="button" ng-click="btn_complete(order.id, 'completed')"
+                                                ng-disabled='!(order.status == "transporting")'
+                                                class="btn btn-success">Hoàn thành</button>
+                                            <button type="button" ng-click="btn_cancel(order.id, 'canceled')"
+                                                ng-disabled='!(order.status == "unconfirmed")'
+                                                class="btn btn-danger">Huỷ</button>
+                                            <button type="button" class="btn btn-secondary ms-2"
+                                                data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var app = angular.module('myApp', ['ngRoute']);
+
+    // GET DATA API
+    app.factory("getAPI", function ($http) {
+        return {
+            getDataAPI: function (url) {
+                return $http.get(url)
+                    .then(function (response) {
+                        return response.data;
+                    });
+            }
+        }
+    });
+    // POST DATA API
+    app.factory("postAPI", function ($http) {
+        return {
+            postDataAPI: function (url, data) {
+                return $http.post(url, data)
+                    .then(function (response) {
+                        return response.data;
+                    });
+            }
+        }
+    });
+
+    app.controller('adminCtrl', function ($scope, getAPI, postAPI) {
+        getOrderListAPI();
+
+        // function btn confirm
+        $scope.btn_confirm = (orderId, status) => {
+            updateOrder(orderId, status);
+        }
+        // function btn transport
+        $scope.btn_transport = (orderId, status) => {
+            updateOrder(orderId, status);
+        }
+        // function btn complete
+        $scope.btn_complete = (orderId, status) => {
+            updateOrder(orderId, status);
+        }
+        // function btn cancel
+        $scope.btn_cancel = (orderId, status) => {
+            updateOrder(orderId, status);
+        }
+
+
+
+
+        // function get list order
+        function getOrderListAPI() {
+            $scope.totalPriceList = [];
+            var priceTemp = 0;
+            var url_order_list = "https://api.deece.vn/orders?page=1&limit=100";
+
+            getAPI.getDataAPI(url_order_list).then(function (response) {
+                $scope.order_list = response.data;
+                for (var i = 0; i < $scope.order_list.length; i++) {
+                    for (var x = 0; x < $scope.order_list[i].ordersFoodList.length; x++) {
+                        // price temp
+                        priceTemp += $scope.order_list[i].ordersFoodList[x].price * $scope.order_list[i].ordersFoodList[x].quantity;
+                    }
+                    $scope.totalPriceList.push(priceTemp);
+                    priceTemp = 0;
+                }
+                console.log($scope.order_list);
+            });
+        }
+
+
+        // function update order
+        function updateOrder(orderId, status) {
+            var url_add_new_order = "http://api.deece.vn/updateOrders";
+            var data = {
+                ordersId: orderId,
+                status: status,
+            };
+            // Convert data to JSON
+            var dataJson = JSON.stringify(data);
+
+            postAPI.postDataAPI(url_add_new_order, dataJson)
+                .then(function (responseData) {
+                    if (responseData.status.code == 200) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Đã cập nhật đơn hàng!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(function () {
+                            $('.modal-backdrop').addClass('d-none');
+                        }, 1650);
+                    } else {
+                        console.log(responseData.status.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: responseData.status.message,
+                        });
+                    }
+                    getOrderListAPI();
+                    console.log(responseData);
+                })
+                .catch(function (error) {
+                    // Xử lý lỗi nếu có
+                    console.log(error);
+                });
+        }
+
+    });
+
+
+
+</script>
+
+</html>
