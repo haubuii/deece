@@ -109,7 +109,6 @@
                                                 ng-disabled='!(order.status == "confirmed")' class="btn btn-warning">Vận
                                                 chuyển</button>
                                             <button type="button" ng-click="btn_complete(order.id, 'completed')"
-                                                ng-disabled='!(order.status == "transporting")'
                                                 class="btn btn-success">Hoàn thành</button>
                                             <button type="button" ng-click="btn_cancel(order.id, 'canceled')"
                                                 ng-disabled='!(order.status == "unconfirmed")'
